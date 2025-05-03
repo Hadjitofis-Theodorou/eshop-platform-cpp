@@ -93,8 +93,8 @@ Unit tests:
   -  💳 Integrate mock payment systems
 
   -  📊 Add analytics dashboards for admins
-# 🛠 Author
-Andreas Hadjitofis
+# 🛠 Authors
+Andreas Hadjitofis & Giorgos Theodorou
 
-Computer Science Student @ National and Kapodistrian University of Athens
+Computer Science Students @ National and Kapodistrian University of Athens
 
