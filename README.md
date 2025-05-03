@@ -96,5 +96,5 @@ Unit tests:
 # 🛠 Authors
 Andreas Hadjitofis & Giorgos Theodorou
 
-Computer Science Students @ National and Kapodistrian University of Athens
+Computer Science Students @ National and Kapodistrian University of Athens 
 
