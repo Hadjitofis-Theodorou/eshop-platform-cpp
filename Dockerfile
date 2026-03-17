@@ -9,7 +9,7 @@ WORKDIR /app
 
 
 COPY . /app
-RUN make clean && make  # Assumes your Makefile produces 'oop24'
+RUN make clean && make  
 
 
 RUN mkdir -p files
