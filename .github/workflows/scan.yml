@@ -9,6 +9,7 @@ permissions:
   contents: read
   packages: write
   id-token: write
+  pull-requests: write  # Required for Scout!
 
 jobs:
   scan:
@@ -24,22 +25,23 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Setup Docker Buildx
+    - name: Setup Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build & push
+    - name: Build & push (lowercase!)
       uses: docker/build-push-action@v6
       with:
         context: .
         push: true
-        tags: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest  # ALL lowercase username!
+        tags: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    - name: Docker Scout (scans for vulns)
+    - name: Docker Scout
       uses: docker/scout-action@v1
       with:
-        image: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest  
+        image: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest
         command: cves
         only-severities: CRITICAL,HIGH,MEDIUM
         summary: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}  # Fixes auth!
