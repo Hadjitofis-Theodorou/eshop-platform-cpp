@@ -32,14 +32,14 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
+        tags: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest  # ALL lowercase username!
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
     - name: Docker Scout (scans for vulns)
       uses: docker/scout-action@v1
       with:
-        image: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
+        image: ghcr.io/hadjitofis-theodorou/eshop-platform-cpp:latest  
         command: cves
         only-severities: CRITICAL,HIGH,MEDIUM
         summary: true
