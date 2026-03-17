@@ -3,8 +3,7 @@ name: Docker Scout Security Scan
 on:
   push:
     branches: [ main ]
-  pull_request:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,36 +11,32 @@ permissions:
   id-token: write
 
 jobs:
-  docker:
+  scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build & push image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
-      - name: Build and push image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Run Docker Scout CVE scan
-        uses: docker/scout-action@v1[web:10][web:30]
-        with:
-          image: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
-          command: cves
-          only-severity: critical,high,medium
-          summary: true
-          # exit-code: true  # Uncomment to fail on critical/high (optional for "success")
+    - name: Docker Scout
+      uses: docker/scout-action@v1
+      with:
+        image: ghcr.io/${{ github.repository_owner }}/eshop-platform-cpp:latest
+        command: cves
+        only-severities: CRITICAL,HIGH,MEDIUM
+        summary: true
